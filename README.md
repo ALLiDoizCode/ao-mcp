@@ -1,26 +1,57 @@
-# FastMCP Boilerplate
+# AO MCP Server
 
-A boilerplate for [FastMCP](https://github.com/punkpeye/fastmcp).
+An MCP server for interacting with the AO blockchain network.
 
-This boilerplate is a good starting point for building an MCP server. It includes a basic setup for testing, linting, formatting, and publishing to NPM.
+## Available Tools
+
+### `ao:createToken`
+Creates a new token on the AO blockchain.
+- Set token name, ticker, supply, decimals, logo, and minting parameters
+
+### `ao:transfer`
+Transfer tokens between addresses.
+- Send tokens from your address to another public key
+
+### `ao:balance`
+Check token balance for a specific address.
+- Get the token balance for any public key
+
+### `ao:balances`
+Get all token holder balances.
+- See all addresses that hold a specific token and their balances
+
+### `ao:info`
+Get token information and metadata.
+- Retrieve details about a token (name, ticker, supply, etc.)
+
+### `ao:upload`
+Upload files to Arweave and get content hash.
+- Upload images or files to Arweave to use as token logos or other purposes
+
+### `ao:getServerInfo`
+Get server public key and available tokens.
+- Returns your server's public key and list of available tokens (AO, wAR, etc.)
+
+## Notes
+- All numeric values must be passed as strings
+- Token quantities use the smallest denomination (account for decimal places)
+- Use `ao:upload` first to get logo hashes for token creation
 
 ## Development
 
 To get started, clone the repository and install the dependencies.
 
 ```bash
-git clone https://github.com/punkpeye/fastmcp-boilerplate.git
-cd fastmcp-boilerplate
+git clone https://github.com/ALLiDoizCode/Permamind.git
 npm install
 npm run dev
 ```
 
-> [!NOTE]
-> If you are starting a new project, you may want to fork [fastmcp-boilerplate](https://github.com/punkpeye/fastmcp-boilerplate) and start from there.
-
 ### Start the server
 
 If you simply want to start the server, you can use the `start` script.
+
+If you did not provide .env with a SEED_PHRASE the server will create one but it will not presist through restarts
 
 ```bash
 npm run start
@@ -31,44 +62,7 @@ However, you can also interact with the server using the `dev` script.
 ```bash
 npm run dev
 ```
+Depending on what AO env you are using you will need to provide your server with AO and Arweave tokens.
+To do this simply ask the server for its public key and transfer it some tokens.
 
-This will start the server and allow you to interact with it using CLI.
-
-### Testing
-
-A good MCP server should have tests. However, you don't need to test the MCP server itself, but rather the tools you implement.
-
-```bash
-npm run test
-```
-
-In the case of this boilerplate, we only test the implementation of the `add` tool.
-
-### Linting
-
-Having a good linting setup reduces the friction for other developers to contribute to your project.
-
-```bash
-npm run lint
-```
-
-This boilerplate uses [Prettier](https://prettier.io/), [ESLint](https://eslint.org/) and [TypeScript ESLint](https://typescript-eslint.io/) to lint the code.
-
-### Formatting
-
-Use `npm run format` to format the code.
-
-```bash
-npm run format
-```
-
-### GitHub Actions
-
-This repository has a GitHub Actions workflow that runs linting, formatting, tests, and publishes package updates to NPM using [semantic-release](https://semantic-release.gitbook.io/semantic-release/).
-
-In order to use this workflow, you need to:
-
-1. Add `NPM_TOKEN` to the repository secrets
-   1. [Create a new automation token](https://www.npmjs.com/settings/punkpeye/tokens/new)
-   2. Add token as `NPM_TOKEN` environment secret (Settings → Secrets and Variables → Actions → "Manage environment secrets" → "release" → Add environment secret)
-1. Grant write access to the workflow (Settings → Actions → General → Workflow permissions → "Read and write permissions")
+The default permaweb env is using the Marshal testnet https://x.com/Marshal_AO so there is currently **NO** cost for storing memories

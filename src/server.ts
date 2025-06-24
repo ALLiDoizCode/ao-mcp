@@ -105,7 +105,13 @@ server.addTool({
   },
   description: "Creates a token based on the args. Call this when you want to create a token",
   execute: async (args) => {
-    return await tokenService.create(keyPair, args);
+    let token = await tokenService.create(keyPair, args);
+    let explorer = `https://lunar.velocity.cloudnet.marshal.ao/#/explorer/${token}/info`;
+    let result = {
+      "explorer": explorer,
+      "token": token
+    }
+    return JSON.stringify(result)
   },
   name: "createToken",
   parameters: z.object({
@@ -126,15 +132,14 @@ server.addTool({
     readOnlyHint: true, // This tool doesn't modify anything
     title: "Upload",
   },
-  description: "uploads data to arweave and returns the hash. Call this when you want to upload data",
+  description: "uploads images and other files and returns the hash. Call this when you want to upload data",
   execute: async (args) => {
-    let result = await upload(keyPair, publicKey, args.data, args.contentType)
+    let result = await upload(keyPair, publicKey, args.path)
     return result.hash
   },
   name: "upload",
   parameters: z.object({
-    data: z.array(z.number()).describe("array buffer"),
-    contentType: z.string().describe("contentType"),
+    path: z.string().describe("absolute path of the file"),
   }),
 });
 
@@ -145,12 +150,15 @@ server.addTool({
     readOnlyHint: true, // This tool doesn't modify anything
     title: "Get Server Info",
   },
-  description: "gets the public key hubId for the server",
+  description: "gets the public key for the server and a list of crypto currency tokens on the AO blockchain",
   parameters: z.object({}), // Empty object
   execute: async (args) => {
     let response = {
       publicKey: publicKey,
-      //hubId: hubId
+      tokens: {
+        AO: "0syT13r0s0tgPmIed95bJnuSqaD29HQNN8D3ElLSrsc",
+        wAR: "xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10"
+      }
     }
     return JSON.stringify(response);
   },
