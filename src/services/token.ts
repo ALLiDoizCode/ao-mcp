@@ -33,7 +33,7 @@ const service = (): TokenService => {
                 await send(signer, processId, tags, null)
                 return "success"
             } catch (e) {
-                throw(e)
+                return JSON.stringify(e)
             }
         },
         balance: async (processId: string, publickey: string): Promise<string> => {
@@ -51,7 +51,7 @@ const service = (): TokenService => {
                 let result = await read(processId, tags)
                 return JSON.stringify(result)
             } catch (e) {
-                throw(e)
+                return JSON.stringify(e)
             }
         },
         balances: async (processId: string): Promise<string> => {
@@ -63,7 +63,7 @@ const service = (): TokenService => {
                 let result = await read(processId, [actionTag])
                 return JSON.stringify(result)
             } catch (e) {
-                throw(e)
+                return JSON.stringify(e)
             }
         },
         info: async (processId: string): Promise<string> => {
@@ -75,7 +75,7 @@ const service = (): TokenService => {
                 let result = await read(processId, [actionTag])
                 return JSON.stringify(result)
             } catch (e) {
-                throw(e)
+                return JSON.stringify(e)
             }
         },
         create: async (signer: JWKInterface, token: Token): Promise<string> => {
@@ -133,15 +133,13 @@ const service = (): TokenService => {
                 multiplierTag
             ]
             try {
-                console.log(initTags)
                 const processId = await createProcess(signer);
                 let tags = [{ name: "Action", value: "Eval" }];
                 await send(signer, processId, tags, luaModule);
                 await send(signer, processId, initTags, null)
                 return processId
             } catch (e) {
-                throw(e)
-                //return JSON.stringify(e)
+                return JSON.stringify(e)
             }
         },
     };
