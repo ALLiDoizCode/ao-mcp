@@ -7,6 +7,7 @@ import { Tag } from "./models/Tag.js";
 import dotenv from 'dotenv';
 import { tokenService } from "./services/token.js"
 import { Token } from "./models/Token.js";
+import { upload } from "./services/uploader.js";
 
 let keyPair: JWKInterface;
 let publicKey: string;
@@ -104,7 +105,7 @@ server.addTool({
   },
   description: "Creates a token based on the args. Call this when you want to create a token",
   execute: async (args) => {
-    return await tokenService.create(keyPair,args);
+    return await tokenService.create(keyPair, args);
   },
   name: "createToken",
   parameters: z.object({
@@ -116,6 +117,24 @@ server.addTool({
     BuyToken: z.string().describe("The token used to pay for the minting of tokens"),
     MaxMint: z.string().describe("The max amount of tokens to mint. MUST be a stringified number"),
     Multiplier: z.string().describe("The amount of tokens minted for 1 BuyToken. MUST be a stringified number"),
+  }),
+});
+
+server.addTool({
+  annotations: {
+    openWorldHint: false, // This tool doesn't interact with external systems
+    readOnlyHint: true, // This tool doesn't modify anything
+    title: "Upload",
+  },
+  description: "uploads data to arweave and returns the hash. Call this when you want to upload data",
+  execute: async (args) => {
+    let result = await upload(keyPair, publicKey, args.data, args.contentType)
+    return result.hash
+  },
+  name: "upload",
+  parameters: z.object({
+    data: z.array(z.number()).describe("array buffer"),
+    contentType: z.string().describe("contentType"),
   }),
 });
 
